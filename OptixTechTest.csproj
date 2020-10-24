@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -19,6 +19,22 @@
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\src\components\Counter.jsx" />
+    <None Remove="ClientApp\src\components\FetchData.jsx" />
+    <None Remove="ClientApp\src\components\Home.jsx" />
+    <None Remove="ClientApp\src\components\Layout.jsx" />
+    <None Remove="ClientApp\src\components\NavMenu.jsx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\components\Counter.jsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\FetchData.jsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\Home.jsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\Layout.jsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\NavMenu.jsx" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
