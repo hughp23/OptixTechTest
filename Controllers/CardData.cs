@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
 
 namespace TestReactServerApp.Controllers
 {
@@ -17,7 +19,7 @@ namespace TestReactServerApp.Controllers
         public List<Cards> GetCards()
         {
             List<Cards> cardsList = new List<Cards>();
-            for (var i = 1; i < 13; i++)
+            for (var i = 1; i < 14; i++)
             {
                 for (var j = 0; j < Suits.Length; j++)
                 {
@@ -33,21 +35,23 @@ namespace TestReactServerApp.Controllers
         }
 
         [HttpGet("ShuffleCards")]
-        public IEnumerable<Cards> ShuffleCards(List<Cards> dealtCards)
+        public List<Cards> ShuffleCards(string dealtCards)
         {
             Random random = new Random();
             List<Cards> allCards = GetCards();
+            List<Cards> dealtCardsList = new List<Cards>();
+            dealtCardsList = JsonConvert.DeserializeObject<List<Cards>>(dealtCards);
 
             //remove already dealt cards
-            allCards.RemoveAll(x => dealtCards.Contains(x));
+            IEnumerable<Cards> newCards = allCards.Where(x => !dealtCardsList.Any(y => y.Suit == x.Suit && y.Value == x.Value));
 
-            return allCards.OrderBy(x => random.Next()).AsEnumerable();
+            return newCards.OrderBy(x => random.Next()).ToList();
         }
 
         public class Cards
         {
-            public int Value { get; set; }
             public string Suit { get; set; }
+            public int Value { get; set; }
         }
     }
 }

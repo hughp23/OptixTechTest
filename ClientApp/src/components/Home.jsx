@@ -1,26 +1,82 @@
 import React, { Component } from 'react';
+import $ from 'jquery';
 
 export class Home extends Component {
-  displayName = Home.name
-
-  render() {
+    state = {
+        cards: [],
+        dealtCards: [],
+        dealtCardSuit: "",
+        dealtCardValue: ""
+    }
+    render() {
     return (
       <div>
-        <h1>Hello, world!</h1>
-        <p>Welcome to your new single-page application, built with:</p>
-        <ul>
-          <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
-          <li><a href='https://facebook.github.io/react/'>React</a> for client-side code</li>
-          <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
-        </ul>
-        <p>To help you get started, we've also set up:</p>
-        <ul>
-          <li><strong>Client-side navigation</strong>. For example, click <em>Counter</em> then <em>Back</em> to return here.</li>
-          <li><strong>Development server integration</strong>. In development mode, the development server from <code>create-react-app</code> runs in the background automatically, so your client-side resources are dynamically built on demand and the page refreshes when you modify any file.</li>
-          <li><strong>Efficient production builds</strong>. In production mode, development-time features are disabled, and your <code>dotnet publish</code> configuration produces minified, efficiently bundled JavaScript files.</li>
-        </ul>
-        <p>The <code>ClientApp</code> subdirectory is a standard React application based on the <code>create-react-app</code> template. If you open a command prompt in that directory, you can run <code>npm</code> commands such as <code>npm test</code> or <code>npm install</code>.</p>
+        <h1>Deal/Shuffle Cards</h1>
+        <h3>{this.state.dealtCardValue}</h3>
+        <h3>{this.state.dealtCardSuit}</h3>
+
+        <button onClick={() => this.shuffleCards()}>Shuffle</button>
+        <button onClick={() => this.dealCard()}>Deal</button>
+        <button onClick={() => this.resetDeck()}>Reset</button>
       </div>
     );
-  }
+    }
+
+    shuffleCards = () => {
+        const { dealtCards } = this.state;
+        console.log(dealtCards, 'dealtCards')
+
+        $.ajax({
+            url: 'api/CardData/ShuffleCards',
+            type: 'GET',
+            data: { dealtCards: JSON.stringify(dealtCards) },
+            dataType: 'json',
+            success: (data) => {
+                console.log(data, 'data');
+                this.setState({ cards: data });
+                console.log(this.state.cards, 'cards');
+            }
+        });
+    }
+
+    dealCard = () => {
+        let { cards, dealtCards } = this.state;
+        const selectedCard = cards[0];
+        let dealtCardSuit = selectedCard.suit;
+        let dealtCardValue = selectedCard.value;
+        if (selectedCard.value === 1) {
+            dealtCardValue = "Ace"
+        }
+        else if (selectedCard.value === 11) {
+            dealtCardValue = "Jack"
+        }
+        else if (selectedCard.value === 12) {
+            dealtCardValue = "Queen"
+        }
+        else if (selectedCard.value === 13) {
+            dealtCardValue = "King"
+        }
+
+        //add card to dealt log
+        dealtCards.push({ Value: selectedCard.value, Suit: selectedCard.suit });
+
+        //remove card from deck
+        cards.splice(0, 1);
+
+        this.setState({ dealtCardSuit, dealtCardValue, dealtCards, cards });
+    }
+
+    resetDeck = () => {
+        this.setState({
+            cards: [],
+            dealtCards: [],
+            dealtCardSuit: "",
+            dealtCardValue: ""
+        })
+        this.shuffleCards();
+    }
+
+    componentDidMount() {
+        this.shuffleCards();
+    }
 }

@@ -22,19 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\src\components\Counter.jsx" />
-    <None Remove="ClientApp\src\components\FetchData.jsx" />
     <None Remove="ClientApp\src\components\Home.jsx" />
-    <None Remove="ClientApp\src\components\Layout.jsx" />
-    <None Remove="ClientApp\src\components\NavMenu.jsx" />
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\src\components\Counter.jsx" />
-    <TypeScriptCompile Include="ClientApp\src\components\FetchData.jsx" />
     <TypeScriptCompile Include="ClientApp\src\components\Home.jsx" />
-    <TypeScriptCompile Include="ClientApp\src\components\Layout.jsx" />
-    <TypeScriptCompile Include="ClientApp\src\components\NavMenu.jsx" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
