@@ -37,15 +37,22 @@ namespace TestReactServerApp.Controllers
         [HttpGet("ShuffleCards")]
         public List<Cards> ShuffleCards(string dealtCards)
         {
-            Random random = new Random();
-            List<Cards> allCards = GetCards();
-            List<Cards> dealtCardsList = new List<Cards>();
-            dealtCardsList = JsonConvert.DeserializeObject<List<Cards>>(dealtCards);
+            try
+            {
+                Random random = new Random();
+                List<Cards> allCards = GetCards();
+                List<Cards> dealtCardsList = new List<Cards>();
+                dealtCardsList = JsonConvert.DeserializeObject<List<Cards>>(dealtCards);
 
-            //remove already dealt cards
-            IEnumerable<Cards> newCards = allCards.Where(x => !dealtCardsList.Any(y => y.Suit == x.Suit && y.Value == x.Value));
+                //remove already dealt cards
+                IEnumerable<Cards> newCards = allCards.Where(x => !dealtCardsList.Any(y => y.Suit == x.Suit && y.Value == x.Value));
 
-            return newCards.OrderBy(x => random.Next()).ToList();
+                return newCards.OrderBy(x => random.Next()).ToList();
+            }
+            catch (Exception Ex)
+            {
+                return null;
+            }
         }
 
         public class Cards
